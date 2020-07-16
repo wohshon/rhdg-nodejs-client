@@ -7,7 +7,7 @@ var infinispan = require('infinispan');
 /* GET home page. */
 //curl 192.168.0.110:3000/get/async-cache1/hello
 router.get('/get/:cacheName/:key', function(req, res, next) {
-  var connected = infinispan.client({port: 11222, host: '192.168.0.110'}, {cacheName: req.params.cacheName});
+  var connected = infinispan.client({port: process.env.DG_PORT || 11222, host: process.env.DG_HOST || '192.168.0.110'}, {cacheName: req.params.cacheName});
   console.log(connected);
   connected.then(function (client) {
     
@@ -34,11 +34,11 @@ router.get('/get/:cacheName/:key', function(req, res, next) {
 
 });
 
-//curl 192.168.0.110:3000/get/async-cache1/hello/world
+//curl -X PUT 192.168.0.110:3000/get/async-cache1/hello/world
 
-router.get('/put/:cacheName/:key/:val', function(req, res, next) {
-  //delibrately read from another server
-  var connected = infinispan.client({port: 12222, host: '192.168.0.110'}, {cacheName: req.params.cacheName});
+router.put('/put/:cacheName/:key/:val', function(req, res, next) {
+  
+  var connected = infinispan.client({port: process.env.DG_PORT || 11222, host: process.env.DG_HOST || '192.168.0.110'}, {cacheName: req.params.cacheName});
   console.log(connected);
   connected.then(function (client) {
     
